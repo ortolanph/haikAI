@@ -9,9 +9,14 @@ spring:
   banner:
     location: banner.txt
   ai:
-    openai:
-      api-key: ${OPENAI_API_KEY}
+    ollama:
       chat:
         options:
-          model: gpt-5
-          temperature: 1
+          model: gemma3:1b
+  data:
+    mongodb:
+      host: localhost
+      port: 27019
+      database: ai_chat
+      username: ai_user
+      password: ai_pass
