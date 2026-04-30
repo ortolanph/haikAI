@@ -28,7 +28,7 @@ public class HaikaiService {
     private final UserService userService;
 
     public String generateSimpleHaikai() {
-        log.info("HaikaiService:generateSimpleHaikai");
+        log.info("HaikaiService:generateSimpleHaikai())");
 
         return chatClient
                 .prompt(SIMPLE_TEMPLATE.create())
@@ -38,7 +38,7 @@ public class HaikaiService {
     }
 
     public Haikai generatePowerfulHaikai(HaikaiRequest request) {
-        log.info("HaikaiService:generatePowerfulHaikai");
+        log.info("HaikaiService:generatePowerfulHaikai(request={})", request);
 
         Prompt prompt = TEMPLATE
                 .create(
@@ -55,7 +55,7 @@ public class HaikaiService {
     }
 
     public ActorFilms getFilmography(String name) {
-        log.info("HaikaiService:generatePowerfulHaikai");
+        log.info("HaikaiService:getFilmography(name={})", name);
 
         return chatClient
                 .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))

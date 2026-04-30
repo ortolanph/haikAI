@@ -1,6 +1,10 @@
 server:
   port: 9010
 
+ai:
+  memory:
+    max_messages: 100
+
 spring:
   application:
     name: haikAI
@@ -9,10 +13,21 @@ spring:
   banner:
     location: banner.txt
   ai:
-    ollama:
+    openai:
+      api-key: ${OPENAI_API_KEY}
       chat:
         options:
-          model: gemma3:1b
+          model: gpt-5.4-nano
+          temperature: 1.0
+        embedding:
+          options:
+            model: text-embeddding-3-small
+
+#   OLLAMA CONFIGURATION
+#    ollama:
+#      chat:
+#        options:
+#          model: gemma3:1b
   data:
     mongodb:
       host: localhost
