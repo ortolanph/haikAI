@@ -1,7 +1,6 @@
 package pt.pauloortolan.haikai.configuration;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
