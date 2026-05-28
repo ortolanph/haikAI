@@ -58,6 +58,8 @@ http://localhost:9010/haikais/image/The%20empty%20desert.Full%20of%20yellow%20sa
 
 ## Actors
 
+Now 
+
 ```
 http GET localhost:9010/actors/filmography/Kevin%20Bacon
 ```
@@ -232,6 +234,13 @@ http GET localhost:9010/actors/filmography/Kevin%20Bacon
 | 2020 | You Should Have Left              | Himself                 | David Koepp          | 584074  |        |
 | 2021 | Quicksand: No Escape              | Detective               | Terry Green          | 621362  |        |
 
+Checks:
+* `Y` - The year is correct
+* `M` - The movie is correct
+* `R` - The role is correct
+* `D` - The director is correct
+* `T` - The TMDB Id is correct
+
 ## Ollama 
 
 ```yaml
@@ -262,4 +271,12 @@ ollama:
   chat:
     options:
       model: gemma3:1b
+```
+
+## Memory
+
+MongoDB
+
+```
+
 ```

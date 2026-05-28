@@ -31,6 +31,11 @@ spring:
         embedding:
           options:
             model: text-embeddding-3-small
+  #   OLLAMA CONFIGURATION
+  #    ollama:
+  #      chat:
+  #        options:
+  #          model: gemma3:1b
   data:
     mongodb:
       host: localhost
@@ -38,9 +43,3 @@ spring:
       database: ai_chat
       username: ai_user
       password: ai_pass
-#   OLLAMA CONFIGURATION
-#    ollama:
-#      chat:
-#        options:
-
-#          model: gemma3:1b
