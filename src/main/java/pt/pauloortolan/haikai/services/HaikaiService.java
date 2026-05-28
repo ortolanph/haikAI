@@ -7,12 +7,21 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.image.Image;
+import org.springframework.ai.image.ImagePrompt;
+import org.springframework.ai.image.ImageResponse;
+import org.springframework.ai.openai.OpenAiImageModel;
+import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
-import pt.pauloortolan.haikai.pojo.ActorFilms;
 import pt.pauloortolan.haikai.pojo.Haikai;
 import pt.pauloortolan.haikai.pojo.HaikaiRequest;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -20,10 +29,11 @@ import java.util.Map;
 public class HaikaiService {
 
     private static final PromptTemplate SIMPLE_TEMPLATE = new PromptTemplate("Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable structure.");
-    private static final PromptTemplate TEMPLATE = new PromptTemplate("Write a {genre} haiku about {theme} following the traditional 5-7-5 syllable structure written {language}.");
-    private static final PromptTemplate ACTOR_TEMPLATE = new PromptTemplate("Generate the filmography for a {name} with the name of played character");
+    private static final PromptTemplate COMPLEX_TEMPLATE = new PromptTemplate("Write a {genre} haiku about {theme} following the traditional 5-7-5 syllable structure written {language}.");
+    private static final String IMAGE_TEMPLATE = "Create an image with the following Haikai: {haikai}. Lines are separated by '.' (dot). Be creative and catch the essence of what has been asked.";
 
     private final ChatClient chatClient;
+    private final OpenAiImageModel imageModel;
 
     private final UserService userService;
 
@@ -40,7 +50,7 @@ public class HaikaiService {
     public Haikai generatePowerfulHaikai(HaikaiRequest request) {
         log.info("HaikaiService:generatePowerfulHaikai(request={})", request);
 
-        Prompt prompt = TEMPLATE
+        Prompt prompt = COMPLEX_TEMPLATE
                 .create(
                         Map.of(
                                 "genre", request.genre(),
@@ -54,15 +64,21 @@ public class HaikaiService {
                 .call().entity(Haikai.class);
     }
 
-    public ActorFilms getFilmography(String name) {
-        log.info("HaikaiService:getFilmography(name={})", name);
+    public byte[] generateImageHaikai(String haikai) throws IOException {
+        log.info("HaikaiService:generateImageHaikai(haikai={})", haikai);
 
-        return chatClient
-                .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
-                .advisors(new SimpleLoggerAdvisor())
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
-                .call()
-                .entity(ActorFilms.class);
+        String renderedPrompt = IMAGE_TEMPLATE.replace("{haikai}", haikai);
+
+        ImageResponse response = imageModel.call(
+                new ImagePrompt(renderedPrompt,
+                        OpenAiImageOptions.builder()
+                                .model("gpt-image-1")
+                                .build())
+        );
+
+        Image image = Objects.requireNonNull(response.getResult()).getOutput();
+
+        return Base64.getDecoder().decode(image.getB64Json());
     }
 
 }

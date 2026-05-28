@@ -31,14 +31,6 @@ class HaikaiServiceTest {
         log.info(result.genre());
     }
 
-    @Test
-    void getFilmography() {
-        ActorFilms actorFilms = haikaiService.getFilmography("Tom Hanks");
 
-        log.info(actorFilms.name());
-        log.info(actorFilms.films().toString());
-    }
 
-    @Test
-    void getFilmographyByFilmId() {}
 }

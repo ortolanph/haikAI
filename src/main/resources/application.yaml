@@ -5,11 +5,20 @@ ai:
   memory:
     max_messages: 100
 
+logging:
+  level:
+    org.springframework.ai: info
+    org.springframework.ai.chat.client.advisor: debug
+    web: debug
+
 spring:
   application:
     name: haikAI
     title: haikAI
     version: 0.0.1-SNAPSHOT
+  reactor:
+    netty:
+      native: false
   banner:
     location: banner.txt
   ai:
@@ -28,6 +37,7 @@ spring:
 #      chat:
 #        options:
 #          model: gemma3:1b
+
   data:
     mongodb:
       host: localhost
