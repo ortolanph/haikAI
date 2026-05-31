@@ -25,19 +25,19 @@ public class ChatClientConfig {
     @Bean
     public ChatClient chatClient() {
         return chatClientBuilder
-                .defaultAdvisors(
-                        new SimpleLoggerAdvisor(),
-                        MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
-                )
-                .build();
+            .defaultAdvisors(
+                new SimpleLoggerAdvisor(),
+                MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
+            )
+            .build();
     }
 
     public ChatMemory mongoChatMemory() {
         return MessageWindowChatMemory
-                .builder()
-                .chatMemoryRepository(mongoChatMemoryRepository)
-                .maxMessages(maxMessages)
-                .build();
+            .builder()
+            .chatMemoryRepository(mongoChatMemoryRepository)
+            .maxMessages(maxMessages)
+            .build();
     }
 
 }

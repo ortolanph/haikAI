@@ -1,0 +1,192 @@
+openapi: "3.0.3"
+info:
+  title: HaikAI API
+  description: API for generating haikus and retrieving actor filmographies using AI
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /haikais/simple:
+    get:
+      summary: Generate a simple haiku
+      description: Generates a playful haiku about mountains and programming with AI using the traditional 5-7-5 syllable structure
+      operationId: generateSimpleHaikai
+      tags:
+        - Haikais
+      responses:
+        "200":
+          description: Simple haiku string
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Mountains touch the sky\nCode flows like a gentle stream\nNature and tech combined"
+
+  /haikais/complex:
+    post:
+      summary: Generate a complex haiku
+      description: Generates a haiku based on genre, theme, and language following the traditional 5-7-5 syllable structure
+      operationId: generateComplexHaikai
+      tags:
+        - Haikais
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HaikaiRequest"
+      responses:
+        "200":
+          description: Generated haiku with metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Haikai"
+
+  /haikais/image:
+    post:
+      summary: Generate a haiku image
+      description: Generates an image from the provided haiku lines
+      operationId: generateHaikaiImage
+      tags:
+        - Haikais
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImageHaikaiRequest"
+      responses:
+        "200":
+          description: PNG image of the haiku
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  /actors/filmography/{actor}:
+    get:
+      summary: Get actor filmography
+      description: Retrieves the top 20 movies for a given actor, including title, year, director, role, and TMDB ID
+      operationId: getActorFilmography
+      tags:
+        - Actors
+      parameters:
+        - name: actor
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Actor name
+          example: Tom Hanks
+      responses:
+        "200":
+          description: Actor filmography
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActorFilms"
+
+components:
+  schemas:
+    HaikaiRequest:
+      type: object
+      required:
+        - genre
+        - theme
+        - language
+      properties:
+        genre:
+          type: string
+          description: Literary genre of the haiku
+          example: romantic
+        theme:
+          type: string
+          description: Theme of the haiku
+          example: ocean sunset
+        language:
+          type: string
+          description: Language to write the haiku in
+          example: Portuguese
+
+    ImageHaikaiRequest:
+      type: object
+      required:
+        - line1
+        - line2
+        - line3
+      properties:
+        line1:
+          type: string
+          description: First line of the haiku (5 syllables)
+          example: An old silent pond
+        line2:
+          type: string
+          description: Second line of the haiku (7 syllables)
+          example: A frog jumps into the pond
+        line3:
+          type: string
+          description: Third line of the haiku (5 syllables)
+          example: Splash! Silence again
+
+    Haikai:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the haiku
+          example: Ocean's Embrace
+        content:
+          type: string
+          description: The haiku poem content
+          example: "Waves kiss the shore gently\n Sunset paints the sky with gold\n Love found in sea's breath"
+        genre:
+          type: string
+          description: Genre of the haiku
+          example: romantic
+        theme:
+          type: string
+          description: Theme of the haiku
+          example: ocean sunset
+        language:
+          type: string
+          description: Language of the haiku
+          example: Portuguese
+
+    ActorFilms:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Actor name
+          example: Tom Hanks
+        films:
+          type: array
+          items:
+            $ref: "#/components/schemas/Film"
+
+    Film:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Movie title
+          example: Forrest Gump
+        year:
+          type: integer
+          description: Release year
+          example: 1994
+        director:
+          type: string
+          description: Movie director
+          example: Robert Zemeckis
+        role:
+          type: string
+          description: Character played by the actor
+          example: Forrest Gump
+        tmdbId:
+          type: integer
+          description: TMDB movie ID
+          example: 13
