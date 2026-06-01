@@ -52,10 +52,10 @@ spring:
 ```
 
 On which:
-`api-key`: your OpenAI key. Do not share.
-`chat.options.mode`: the model of the AI. For this article, gpt-5.4-nano will fit
-`chat.options.temperature`: how random will be the answer.
-`chat.embedding.options.model`: model to measure the relatedness of text string
+* `api-key`: your OpenAI key. Do not share.
+* `chat.options.mode`: the model of the AI. For this article, gpt-5.4-nano will fit
+* `chat.options.temperature`: how random will be the answer.
+* `chat.embedding.options.model`: model to measure the relatedness of text string
 
 On the Java side, I had to configure the ChatClient:
 
@@ -96,14 +96,14 @@ Knowing that let's move. Let's examine the diagram below:
 
 ```mermaid
 sequenceDiagram
-    External ->>+ HaikaiController: GET haikais/simple
-    HaikaiController ->>+ HaikaiService: generateSimpleHaikai()
-    HaikaiService ->>+ ChatClient: call()
-    ChatClient ->>+ OpenAIIntegration: Prompt
-    OpenAIIntegration ->>- ChatClient: result
-    ChatClient ->>- HaikaiService: haiku generated
+    External ->>+ HaikaiController: POST haikais/complex
+    HaikaiController ->>+ HaikaiService: generatePowerfulHaikai()
+    HaikaiService ->>+ OpenAIImageModel: call()
+    OpenAIImageModel ->>+ OpenAIIntegration: Prompt
+    OpenAIIntegration ->>- OpenAIImageModel: result
+    OpenAIImageModel ->>- HaikaiService: haiku generated
     HaikaiService ->>- HaikaiController: message
-    HaikaiController ->>- External: text/plain
+    HaikaiController ->>- External: image/png
 ```
 
 This is a pretty straightforward example, nothing uncommon. The code of the service is:
