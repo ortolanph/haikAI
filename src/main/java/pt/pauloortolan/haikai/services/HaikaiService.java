@@ -8,6 +8,7 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.image.Image;
+import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.image.ImageResponse;
 import org.springframework.ai.openai.OpenAiImageModel;
@@ -39,7 +40,7 @@ public class HaikaiService {
         """;
 
     private final ChatClient chatClient;
-    private final OpenAiImageModel imageModel;
+    private final ImageModel imageModel;
 
     private final UserService userService;
 
