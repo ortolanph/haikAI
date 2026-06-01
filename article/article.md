@@ -439,12 +439,12 @@ Remarks:
 | 1988 | Mississippi Burning               | Lt. R. Anderson      | Alan Parker          |  12033  | `YMD`  |
 | 1989 | Loverboy                          | Keith                | Cynthia Verges       |  10820  |  `YM`  |
 | 1996 | A Time to Kill                    | Jake Brigance        | Joel Schumacher      |  11268  | `YMD`  |
-| 1997 | The Disappearance of Garcia Lorca | Edward               | Antonio Giménez Rico |  5953   |   ``   |
+| 1997 | The Disappearance of Garcia Lorca | Edward               | Antonio Giménez Rico |  5953   |        |
 | 1997 | The Edge                          | Richard Attenborough | Lee Tamahori         |  4016   | `YMD`  |
 | 2004 | Jersey Girl                       | Steve Gold           | Kevin Smith          |  12376  | `YMRD` |
 | 2005 | Kiss Kiss Bang Bang               | Marv                 | Shane Black          |  5081   | `YMD`  |
 | 2013 | The Big Wedding                   | George               | Justin Zackham       | 207643  | `YMD`  |
-| 2013 | The Letdown                       | Jack                 | Garry Marshall       | 206981  |   ``   |
+| 2013 | The Letdown                       | Jack                 | Garry Marshall       | 206981  |        |
 | 2021 | Quicksand: No Escape              | Detective            | Terry Green          | 621362  |  `M`   |
 
 Remarks:
