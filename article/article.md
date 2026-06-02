@@ -52,6 +52,7 @@ spring:
 ```
 
 On which:
+
 * `api-key`: your OpenAI key. Do not share.
 * `chat.options.mode`: the model of the AI. For this article, gpt-5.4-nano will fit
 * `chat.options.temperature`: how random will be the answer.
@@ -109,7 +110,7 @@ sequenceDiagram
 This is a pretty straightforward example, nothing uncommon. The code of the service is:
 
 ```java
-    private static final PromptTemplate SIMPLE_TEMPLATE = new PromptTemplate("Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable structure.");
+private static final PromptTemplate SIMPLE_TEMPLATE = new PromptTemplate("Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable structure.");
 
 private final ChatClient chatClient;
 private final UserService userService;
@@ -155,13 +156,13 @@ sequenceDiagram
     OpenAIIntegration ->>- ChatClient: result
     ChatClient ->>- HaikaiService: haiku generated
     HaikaiService ->>- HaikaiController: message
-    HaikaiController ->>- External: text/plain
+    HaikaiController ->>- External: application/json
 ```
 
 The method code:
 
 ```java
-    private static final PromptTemplate COMPLEX_TEMPLATE = new PromptTemplate("Write a {genre} haiku about {theme} following the traditional 5-7-5 syllable structure written {language}.");
+private static final PromptTemplate COMPLEX_TEMPLATE = new PromptTemplate("Write a {genre} haiku about {theme} following the traditional 5-7-5 syllable structure written {language}.");
 private final UserService userService;
 
 public Haikai generatePowerfulHaikai(HaikaiRequest request) {
@@ -212,7 +213,7 @@ Again, I pasted the resulting Haikai in a ChatGPT image session and this is the 
 
 The third example with Haikais is the image generation. Again, this is not a complex thing, but instead using the
 ChatClient it will use the `OpenAiImageModel` class instance. This is specific to OpenAI, but implements the ImageModel
-interface from Spring Boot AI, which means, where there are implementations. For what I saw, Ollama Spring Boot AI API
+interface from Spring Boot AI, where there are implementations. For what I checked, Ollama Spring Boot AI API
 does not support image generation.
 
 While testing, a problem occurred and I have to run the application with the JVM Option below:
@@ -221,41 +222,156 @@ While testing, a problem occurred and I have to run the application with the JVM
 --enable-native-access=ALL-UNNAMED
 ```
 
-The process is almost the same. Instead calling a chat client, I called the image model to make integration with Open AI:
+The code for this service is:
+
+```java
+private static final String IMAGE_TEMPLATE = """
+            Create an image with the following Haikai:
+        
+                {haikai_line1}
+                {haikai_line2}
+                {haikai_line3}
+        
+            Be creative and catch the essence of what has been asked.
+        """;
+
+private final ImageModel imageModel;
+
+public byte[] generateImageHaikai(ImageHaikaiRequest imageHaikaiRequest) {
+    log.info("HaikaiService:generateImageHaikai(imageHaikaiRequest={})", imageHaikaiRequest);
+
+    String renderedPrompt = IMAGE_TEMPLATE
+            .replace("{haikai_line1}", imageHaikaiRequest.line1())
+            .replace("{haikai_line2}", imageHaikaiRequest.line2())
+            .replace("{haikai_line3}", imageHaikaiRequest.line3());
+
+    ImageResponse response = imageModel.call(
+            new ImagePrompt(renderedPrompt,
+                    OpenAiImageOptions.builder()
+                            .model("gpt-image-1")
+                            .build())
+    );
+
+    Image image = Objects.requireNonNull(response.getResult()).getOutput();
+
+    return Base64.getDecoder().decode(image.getB64Json());
+}
+```
+
+The process is almost the same, instead calling a chat client, I called the image model to make integration with Open
+AI:
 
 ```mermaid
 sequenceDiagram
     External ->>+ HaikaiController: POST haikais/image
     HaikaiController ->>+ HaikaiService: generatePowerfulHaikai()
-    HaikaiService ->>+ ChatClient: call()
-    ChatClient ->>+ OpenAIIntegration: Prompt
-    OpenAIIntegration ->>- ChatClient: result
-    ChatClient ->>- HaikaiService: haiku generated
+    HaikaiService ->>+ ImageModel: call()
+    ImageModel ->>+ OpenAIIntegration: Prompt
+    OpenAIIntegration ->>- ImageModel: result
+    ImageModel ->>- HaikaiService: haiku generated
     HaikaiService ->>- HaikaiController: message
-    HaikaiController ->>- External: text/plain
+    HaikaiController ->>- External: image/png
 ```
 
-From Wikipedia
+From [Wikipedia Haiku article](https://en.wikipedia.org/wiki/Haiku), I got the haiku for this example, but I went
+beyond,
+not only to put the English version, but also the original in Japanese. The poem in English is:
 
-```
-http -d -o "haikai.png" POST localhost:9010/haikais/image line1="old pond" line2="frog leaps in" line3="water's sound"
-```
+> old pond
+> frog leaps in
+> water's sound
+
+Then, the generated image is:
 
 ![Generated by IA - English](haikai.png)
 
-From Wikipedia
+The Japanese version is:
 
-```
-http -d -o "haikai0.png" POST localhost:9010/haikais/image line1="古池や蛙飛び込む水の音" line2="ふるいけやかわずとびこむみずのおと" line3=""
-```
+> 古池や蛙飛び込む水の音
+> ふるいけやかわずとびこむみずのおと
+
+As I am not familiar with Japanese, I just copy-pasted the original haiku. I assume that the AI will understand the
+original and generate a similar image. The result is:
 
 ![Generated by IA - English](haikai0.png)
 
+They are not the same image, but they have the same concept.
+
 ## Actors
 
+Other example that was developed, getting a bit off the Haikai theme, was the filmography of an actor. I just want to
+test the ability of the AI to return a list of movies with the role, director, year and TMDB Id.
+
+The structure of the response is:
+
+```mermaid
+classDiagram
+    ActorFilms "1" -- "many" Film
+
+    class ActorFilms {
+        -String name
+        -List<Film> films
+    }
+
+    class Film {
+        -String title
+        -int year
+        -String director
+        -String role
+        -int tmdbId
+    }
 ```
-http GET localhost:9010/actors/filmography/Kevin%20Bacon
+
+And I thought about one actor on which is the most prolific in the world. Who is it? *Kevin Bacon*, of course. There is
+even a game called "Six Degrees of Kevin Bacon" where the goal is to find the shortest path between an actor and Kevin
+Bacon, based on the movies they have been in together.
+
+The process is the same as the previous examples, but instead of returning a Haikai, it returns an `ActorFilms` object
+with the name of the actor and a list of films with the title, year, director, role and TMDB Id.
+
+```mermaid
+sequenceDiagram
+    External ->>+ ActorsController: GET actors/filmography/{actorName}
+    ActorsController ->>+ ActorsService: generatePowerfulHaikai()
+    ActorsService ->>+ ChatClient: call()
+    ChatClient ->>+ OpenAIIntegration: Prompt
+    OpenAIIntegration ->>- ChatClient: result
+    ChatClient ->>- ActorsService: haiku generated
+    ActorsService ->>- ActorsController: message
+    ActorsController ->>- External: text/json
 ```
+
+The code for this service is:
+
+```java
+    private static final PromptTemplate ACTOR_TEMPLATE = new PromptTemplate(
+        """
+                       Generate the filmography for a {name} with the name of played character.
+                       I want an object with the top 20 movies.
+                       I want a list with the movie title, the movie year, the movie director, the actor role, and the tmdbId.
+                """);
+
+private final ChatClient chatClient;
+
+private final UserService userService;
+
+public ActorFilms getFilmography(String name) {
+    log.info("ActorsService:getFilmography(name={})", name);
+
+    return chatClient
+            .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
+            .advisors(new SimpleLoggerAdvisor())
+            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
+            .call()
+            .entity(ActorFilms.class);
+}
+```
+
+Note that the prompt is a bit more complex than the previous ones, as it has to specify the structure of the response
+and the number of movies to return. The result is a JSON object with the name of the actor and a list of films with the
+title, year, director, role and TMDB Id.
+
+Example output:
 
 ```json
 {
@@ -405,15 +521,21 @@ http GET localhost:9010/actors/filmography/Kevin%20Bacon
 }
 ```
 
+Ok, but there's a catch? AI can commit mistakes, so I went through the list and checked if the information was correct.
+I found mistakes. I created two tables, one with movies on which Kevin Bacon was, and another with movies on which he
+was not. I also checked all the other data.
+
 Checks:
 
-* `Y` - The year is correct
-* `M` - The movie is correct
-* `R` - The role is correct
-* `D` - The director is correct
-* `T` - The TMDB Id is correct
+| Check | Description             |
+|:-----:|-------------------------|
+|  `Y`  | The year is correct     |
+|  `M`  | The movie is correct    |
+|  `R`  | The role is correct     |
+|  `D`  | The director is correct |
+|  `T`  | The TMDB Id is correct  |
 
-#### In
+### Movies with Kevin Bacon
 
 | Year | Title                | Role                    | Director          | TMDB ID | Checks |
 |:----:|----------------------|-------------------------|-------------------|:-------:|:------:|
@@ -432,7 +554,7 @@ Remarks:
 
 * The Following is a TV Show
 
-#### Not in
+### Movies Without Kevin Bacon
 
 | Year | Title                             | Role                 | Director             | TMDB ID | Checks |
 |:----:|-----------------------------------|----------------------|----------------------|:-------:|:------:|
@@ -456,6 +578,9 @@ Remarks:
 
 ## Ollama
 
+Instead of using OpenAI, you can use Ollama, which is a local LLM server. You can use this docker compose configuration
+to run Ollama locally:
+
 ```yaml
 services:
   ollama:
@@ -472,6 +597,15 @@ volumes:
   ollama:
 ```
 
+But, before doing anything, you have to install a model. For this article, I used the `gemma3:1b` model, which is a
+small model that can run on a local machine. You can install it with the command:
+
+```shell
+docker exec -it ollama ollama pull gemma3:1b
+```
+
+Then you have to ignore the OpenAI configuration and add the Ollama dependency to your project:
+
 ```xml
 
 <dependency>
@@ -480,6 +614,8 @@ volumes:
 </dependency>
 ```
 
+Finally, you have to configure the model in your application properties:
+
 ```yaml
 ollama:
   chat:
@@ -487,9 +623,22 @@ ollama:
       model: gemma3:1b
 ```
 
+Note that you don't need to configure the API key neither the host and port, as the default configuration is to connect
+to `http://localhost:11434`, which is the default configuration of the Ollama server.
+
+For more information on what models are available and how to use them, refer to
+the [Ollama documentation](https://ollama.com/docs/usage/models).
+
+For more information on what AIs you can run locally, refer to the site Can I Run AI Locally? (https://cani.run/), which
+is a great resource to check if a model can run on your machine and what are the requirements.
+
 ## Memory
 
 MongoDB
+
+The last, but not least, example is the memory. AI can remember the conversation with the user, and use it to improve
+the answers. For this example, I used MongoDB as the memory repository, but there are other implementations available,
+such as Redis or JDBC.
 
 ```yaml
 ai:
@@ -507,15 +656,15 @@ spring:
       password: ai_pass
 ```
 
+And the configuration of the memory repository:
+
 ```java
-    private final MongoChatMemoryRepository mongoChatMemoryRepository;
+private final MongoChatMemoryRepository mongoChatMemoryRepository;
 
 @Value("${ai.memory.max_messages}")
 private int maxMessages;
-```
 
-```java
-    public ChatMemory mongoChatMemory() {
+public ChatMemory mongoChatMemory() {
     return MessageWindowChatMemory
             .builder()
             .chatMemoryRepository(mongoChatMemoryRepository)
@@ -523,6 +672,9 @@ private int maxMessages;
             .build();
 }
 ```
+
+At the configuration of the ChatClient, I added the `MessageChatMemoryAdvisor` that will save the conversation in the
+memory repository:
 
 ```java
 
@@ -536,6 +688,8 @@ public ChatClient chatClient() {
             .build();
 }
 ```
+
+This is an example of a conversation saved in MongoDB, where the AI has generated the filmography of Kevin Bacon:
 
 ```
 {
@@ -559,4 +713,15 @@ public ChatClient chatClient() {
 }
 ```
 
+This is a picture of the MongoDB collection with the conversations:
+
 ![mongo_express_screen_shot.png](mongo_express_screen_shot.png)
+
+## Conclusions
+
+You can use the integration with Spring Boot AI to create a lot of different applications. You only to have in mind that
+every call to the AI will cost you money. You can use Ollama to run AI locally, but you have to check your machine
+capabilities, or install on a server with the necessary configuration to run a stronger model. It's possible to use
+memory to save the conversations with the user, then the context will be richer and the answers will be better. You can
+also use the image generation to create images based on some prompt you want to use. The possibilities are endless, and
+it's up to you to explore them.
