@@ -11,12 +11,10 @@ import org.springframework.ai.image.Image;
 import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.image.ImageResponse;
-import org.springframework.ai.openai.OpenAiImageModel;
 import org.springframework.ai.openai.OpenAiImageOptions;
 import org.springframework.stereotype.Service;
 import pt.pauloortolan.haikai.pojo.Haikai;
 import pt.pauloortolan.haikai.pojo.HaikaiRequest;
-import pt.pauloortolan.haikai.pojo.ImageHaikaiRequest;
 
 import java.util.Base64;
 import java.util.Map;

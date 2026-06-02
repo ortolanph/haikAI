@@ -97,8 +97,8 @@ Knowing that let's move. Let's examine the diagram below:
 
 ```mermaid
 sequenceDiagram
-    External ->>+ HaikaiController: POST haikais/complex
-    HaikaiController ->>+ HaikaiService: generatePowerfulHaikai()
+    External ->>+ HaikaiController: GET haikais/simple
+    HaikaiController ->>+ HaikaiService: generateSimpleHaikai()
     HaikaiService ->>+ OpenAIImageModel: call()
     OpenAIImageModel ->>+ OpenAIIntegration: Prompt
     OpenAIIntegration ->>- OpenAIImageModel: result
@@ -264,7 +264,7 @@ AI:
 ```mermaid
 sequenceDiagram
     External ->>+ HaikaiController: POST haikais/image
-    HaikaiController ->>+ HaikaiService: generatePowerfulHaikai()
+    HaikaiController ->>+ HaikaiService: generateImageHaikai()
     HaikaiService ->>+ ImageModel: call()
     ImageModel ->>+ OpenAIIntegration: Prompt
     OpenAIIntegration ->>- ImageModel: result
@@ -332,11 +332,11 @@ with the name of the actor and a list of films with the title, year, director, r
 ```mermaid
 sequenceDiagram
     External ->>+ ActorsController: GET actors/filmography/{actorName}
-    ActorsController ->>+ ActorsService: generatePowerfulHaikai()
+    ActorsController ->>+ ActorsService: getFilmography()
     ActorsService ->>+ ChatClient: call()
     ChatClient ->>+ OpenAIIntegration: Prompt
     OpenAIIntegration ->>- ChatClient: result
-    ChatClient ->>- ActorsService: haiku generated
+    ChatClient ->>- ActorsService: filmography generated
     ActorsService ->>- ActorsController: message
     ActorsController ->>- External: text/json
 ```
