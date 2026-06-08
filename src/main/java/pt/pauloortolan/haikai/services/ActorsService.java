@@ -17,11 +17,11 @@ import java.util.Map;
 public class ActorsService {
 
     private static final PromptTemplate ACTOR_TEMPLATE = new PromptTemplate(
-        """
-                   Generate the filmography for a {name} with the name of played character.
-                   I want an object with the top 20 movies.
-                   I want a list with the movie title, the movie year, the movie director, the actor role, and the tmdbId.
-            """);
+            """
+                           Generate the filmography for a {name} with the name of played character.
+                           I want an object with the top 20 movies.
+                           I want a list with the movie title, the movie year, the movie director, the actor role, and the tmdbId.
+                    """);
 
     private final ChatClient chatClient;
 
@@ -31,11 +31,11 @@ public class ActorsService {
         log.info("ActorsService:getFilmography(name={})", name);
 
         return chatClient
-            .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
-            .advisors(new SimpleLoggerAdvisor())
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
-            .call()
-            .entity(ActorFilms.class);
+                .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
+                .advisors(new SimpleLoggerAdvisor())
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
+                .call()
+                .entity(ActorFilms.class);
     }
 
 }

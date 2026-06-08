@@ -369,157 +369,8 @@ public ActorFilms getFilmography(String name) {
 
 Note that the prompt is a bit more complex than the previous ones, as it has to specify the structure of the response
 and the number of movies to return. The result is a JSON object with the name of the actor and a list of films with the
-title, year, director, role and TMDB Id.
-
-Example output:
-
-```json
-{
-  "films": [
-    {
-      "director": "Nicole Kassell",
-      "role": "Bob",
-      "title": "The Woodsman",
-      "tmdbId": 4175,
-      "year": 2004
-    },
-    {
-      "director": "Antonio Giménez Rico",
-      "role": "Edward",
-      "title": "The Disappearance of Garcia Lorca",
-      "tmdbId": 5953,
-      "year": 1997
-    },
-    {
-      "director": "Alan Parker",
-      "role": "Lt. R. Anderson",
-      "title": "Mississippi Burning",
-      "tmdbId": 12033,
-      "year": 1988
-    },
-    {
-      "director": "Rob Reiner",
-      "role": "Lt. Daniel Kaffee",
-      "title": "A Few Good Men",
-      "tmdbId": 619,
-      "year": 1992
-    },
-    {
-      "director": "Kevin Smith",
-      "role": "Steve Gold",
-      "title": "Jersey Girl",
-      "tmdbId": 12376,
-      "year": 2004
-    },
-    {
-      "director": "Cynthia Verges",
-      "role": "Keith",
-      "title": "Loverboy",
-      "tmdbId": 10820,
-      "year": 1989
-    },
-    {
-      "director": "John Landis",
-      "role": "Chip Diller",
-      "title": "Animal House",
-      "tmdbId": 9469,
-      "year": 1978
-    },
-    {
-      "director": "Lee Tamahori",
-      "role": "Richard Attenborough",
-      "title": "The Edge",
-      "tmdbId": 4016,
-      "year": 1997
-    },
-    {
-      "director": "John McNaughton",
-      "role": "Tommy",
-      "title": "Wild Things",
-      "tmdbId": 12109,
-      "year": 1998
-    },
-    {
-      "director": "Shane Black",
-      "role": "Marv",
-      "title": "Kiss Kiss Bang Bang",
-      "tmdbId": 5081,
-      "year": 2005
-    },
-    {
-      "director": "Marc Sch?l?ndorff",
-      "role": "John R. Scott",
-      "title": "Murder in the First",
-      "tmdbId": 5950,
-      "year": 1995
-    },
-    {
-      "director": "Paul Verhoeven",
-      "role": "Sebastian Caine",
-      "title": "Hollow Man",
-      "tmdbId": 2910,
-      "year": 2000
-    },
-    {
-      "director": "Herbert Ross",
-      "role": "William 'Bubba' Higgins",
-      "title": "Footloose",
-      "tmdbId": 1655,
-      "year": 1984
-    },
-    {
-      "director": "Justin Zackham",
-      "role": "George",
-      "title": "The Big Wedding",
-      "tmdbId": 207643,
-      "year": 2013
-    },
-    {
-      "director": "Joel Schumacher",
-      "role": "Jake Brigance",
-      "title": "A Time to Kill",
-      "tmdbId": 11268,
-      "year": 1996
-    },
-    {
-      "director": "Terry Green",
-      "role": "Detective",
-      "title": "Quicksand: No Escape",
-      "tmdbId": 621362,
-      "year": 2021
-    },
-    {
-      "director": "Garry Marshall",
-      "role": "Jack",
-      "title": "The Letdown",
-      "tmdbId": 206981,
-      "year": 2013
-    },
-    {
-      "director": "David Koepp",
-      "role": "Himself",
-      "title": "You Should Have Left",
-      "tmdbId": 584074,
-      "year": 2020
-    },
-    {
-      "director": "Glenn Ficarra",
-      "role": "Jacob",
-      "title": "Crazy, Stupid, Love",
-      "tmdbId": 594970,
-      "year": 2011
-    },
-    {
-      "director": "Kevin Williamson",
-      "role": "Mark",
-      "title": "The Following",
-      "tmdbId": 254048,
-      "year": 2013
-    }
-  ],
-  "name": "Kevin Bacon"
-}
-```
+title, year, director, role and TMDB Id. You can download
+the [Kevin Bacon filmography result](https://ortolanph.neocities.com/javalotsofbeans/kevin_bacon.json).
 
 Ok, but there's a catch? AI can commit mistakes, so I went through the list and checked if the information was correct.
 I found mistakes. I created two tables, one with movies on which Kevin Bacon was, and another with movies on which he
@@ -534,6 +385,11 @@ Checks:
 |  `R`  | The role is correct     |
 |  `D`  | The director is correct |
 |  `T`  | The TMDB Id is correct  |
+
+The TMBD Id is the unique identifier of a movie on [The Movie Database (TMDB)](https://www.themoviedb.org/), which is a
+popular online database for
+movies, TV shows and people related to the entertainment industry. The TMDB Id is a number that identifies a movie, and
+it can be used to get more information about the movie, such as the cast, the crew, the plot, the ratings, etc.
 
 ### Movies with Kevin Bacon
 
@@ -561,12 +417,12 @@ Remarks:
 | 1988 | Mississippi Burning               | Lt. R. Anderson      | Alan Parker          |  12033  | `YMD`  |
 | 1989 | Loverboy                          | Keith                | Cynthia Verges       |  10820  |  `YM`  |
 | 1996 | A Time to Kill                    | Jake Brigance        | Joel Schumacher      |  11268  | `YMD`  |
-| 1997 | The Disappearance of Garcia Lorca | Edward               | Antonio Giménez Rico |  5953   |        |
+| 1997 | The Disappearance of Garcia Lorca | Edward               | Antonio Giménez Rico |  5953   | `NONE` |
 | 1997 | The Edge                          | Richard Attenborough | Lee Tamahori         |  4016   | `YMD`  |
 | 2004 | Jersey Girl                       | Steve Gold           | Kevin Smith          |  12376  | `YMRD` |
 | 2005 | Kiss Kiss Bang Bang               | Marv                 | Shane Black          |  5081   | `YMD`  |
 | 2013 | The Big Wedding                   | George               | Justin Zackham       | 207643  | `YMD`  |
-| 2013 | The Letdown                       | Jack                 | Garry Marshall       | 206981  |        |
+| 2013 | The Letdown                       | Jack                 | Garry Marshall       | 206981  | `NONE` |
 | 2021 | Quicksand: No Escape              | Detective            | Terry Green          | 621362  |  `M`   |
 
 Remarks:
@@ -575,6 +431,29 @@ Remarks:
   is [Death In Granada](https://www.themoviedb.org/movie/104106-death-in-granada)
 * The Letdown appears to be a 2013 show
 * Quicksand: No Escape is a 1992 movie
+
+### Changing the Temperature
+
+I've changed the temperature to 0.1 and the result was more accurate. I change the actor for Tom Cruise just to not get
+cached results, and restricted to 10 movies. Also, is possible to donwload
+the [Tom Cruise filmography result](https://ortolanph.neocities.com/javalotsofbeans/tom_cruise.json).
+
+| Year | Title                              | Role                     | Director              | TMDB ID | Checks  |
+|:----:|------------------------------------|--------------------------|-----------------------|:-------:|:-------:|
+| 2022 | Top Gun: Maverick                  | Pete "Maverick" Mitchell | Joseph Kosinski       | 361743  | `YMRDT` |
+| 2018 | Mission: Impossible – Fallout      | Ethan Hunt               | Christopher McQuarrie | 423108  | `YMRD`  |
+| 2015 | Mission: Impossible – Rogue Nation | Ethan Hunt               | Christopher McQuarrie | 330457  | `YMRD`  |
+| 2006 | Mission: Impossible III            | Ethan Hunt               | J.J. Abrams           |  15752  | `YMRD`  |
+| 2000 | Mission: Impossible II             | Ethan Hunt               | John Woo              |   196   | `YMRD`  |
+| 1996 | Mission: Impossible                | Ethan Hunt               | Brian De Palma        |   105   | `YMRD`  |
+| 2005 | War of the Worlds                  | Ray Ferrier              | Steven Spielberg      |  1865   | `YMRD`  |
+| 1996 | Jerry Maguire                      | Jerry Maguire            | Cameron Crowe         |  11072  | `YMRD`  |
+| 1992 | A Few Good Men                     | Lt. Daniel Kaffee        | Rob Reiner            |   103   | `YMRD`  |
+| 2002 | Minority Report                    | John Anderton            | Steven Spielberg      |   272   | `YMRD`  |
+
+This time Open AI did not return any wrong movie, but only one right TMDB Id. I did a test with 20 movies and it
+returned almost the same list with 10 new other, but with one movie that Tom Cruise was not in. Even with a low
+temperature, the AI can return wrong results, but with less hallucinations.
 
 ## Ollama
 
