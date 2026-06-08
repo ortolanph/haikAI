@@ -86,8 +86,7 @@ Refer to [Advisors API](https://docs.spring.io/spring-ai/reference/api/advisors.
 
 You can go to the browser, access your favorite AI and time this:
 
-> Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable
-> structure.
+> Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable structure.
 
 But you are a programmer. You know how to develop software (I hope) and you don't bend to AI tools, you delegate to
 them, you integrate them into your programs. You know Spring Boot, and them you browse the initilizr front and find
@@ -104,7 +103,7 @@ sequenceDiagram
     OpenAIIntegration ->>- OpenAIImageModel: result
     OpenAIImageModel ->>- HaikaiService: haiku generated
     HaikaiService ->>- HaikaiController: message
-    HaikaiController ->>- External: image/png
+    HaikaiController ->>- External: plain/text
 ```
 
 This is a pretty straightforward example, nothing uncommon. The code of the service is:
@@ -154,7 +153,7 @@ sequenceDiagram
     HaikaiService ->>+ ChatClient: call()
     ChatClient ->>+ OpenAIIntegration: Prompt
     OpenAIIntegration ->>- ChatClient: result
-    ChatClient ->>- HaikaiService: haiku generated
+    ChatClient ->>- HaikaiService: response generated
     HaikaiService ->>- HaikaiController: message
     HaikaiController ->>- External: application/json
 ```
@@ -268,7 +267,7 @@ sequenceDiagram
     HaikaiService ->>+ ImageModel: call()
     ImageModel ->>+ OpenAIIntegration: Prompt
     OpenAIIntegration ->>- ImageModel: result
-    ImageModel ->>- HaikaiService: haiku generated
+    ImageModel ->>- HaikaiService: image generated
     HaikaiService ->>- HaikaiController: message
     HaikaiController ->>- External: image/png
 ```
