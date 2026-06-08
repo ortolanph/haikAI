@@ -387,9 +387,9 @@ Checks:
 |  `T`  | The TMDB Id is correct  |
 
 The TMBD Id is the unique identifier of a movie on [The Movie Database (TMDB)](https://www.themoviedb.org/), which is a
-popular online database for
-movies, TV shows and people related to the entertainment industry. The TMDB Id is a number that identifies a movie, and
-it can be used to get more information about the movie, such as the cast, the crew, the plot, the ratings, etc.
+popular online database for movies, TV shows and people related to the entertainment industry. The TMDB Id is a number
+that identifies a movie, and it can be used to get more information about the movie, such as the cast, the crew, the
+plot, the ratings, etc.
 
 ### Movies with Kevin Bacon
 
@@ -434,8 +434,8 @@ Remarks:
 
 ### Changing the Temperature
 
-I've changed the temperature to 0.1 and the result was more accurate. I change the actor for Tom Cruise just to not get
-cached results, and restricted to 10 movies. Also, is possible to donwload
+I've changed the temperature to **0.1** and the result was more accurate. I change the actor for Tom Cruise just to not
+get cached results, and restricted to 10 movies. Also, is possible to donwload
 the [Tom Cruise filmography result](https://ortolanph.neocities.com/javalotsofbeans/tom_cruise.json).
 
 | Year | Title                              | Role                     | Director              | TMDB ID | Checks  |
@@ -451,9 +451,9 @@ the [Tom Cruise filmography result](https://ortolanph.neocities.com/javalotsofbe
 | 1992 | A Few Good Men                     | Lt. Daniel Kaffee        | Rob Reiner            |   103   | `YMRD`  |
 | 2002 | Minority Report                    | John Anderton            | Steven Spielberg      |   272   | `YMRD`  |
 
-This time Open AI did not return any wrong movie, but only one right TMDB Id. I did a test with 20 movies and it
+This time Open AI did not return any wrong movie, but only one right TMDB Id. I did a test with 20 movies, and it
 returned almost the same list with 10 new other, but with one movie that Tom Cruise was not in. Even with a low
-temperature, the AI can return wrong results, but with less hallucinations.
+temperature, the AI can return wrong results, but with fewer hallucinations.
 
 ## Ollama
 
