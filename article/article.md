@@ -66,11 +66,11 @@ private final ChatClient.Builder chatClientBuilder;
 @Bean
 public ChatClient chatClient() {
     return chatClientBuilder
-            .defaultAdvisors(
-                    new SimpleLoggerAdvisor(),
-                    MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
-            )
-            .build();
+        .defaultAdvisors(
+            new SimpleLoggerAdvisor(),
+            MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
+        )
+        .build();
 }
 ```
 
@@ -86,7 +86,8 @@ Refer to [Advisors API](https://docs.spring.io/spring-ai/reference/api/advisors.
 
 You can go to the browser, access your favorite AI and time this:
 
-> Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable structure.
+> Write a playful haiku about mountains and the joy of programming with AI following the traditional 5-7-5 syllable
+> structure.
 
 But you are a programmer. You know how to develop software (I hope) and you don't bend to AI tools, you delegate to
 them, you integrate them into your programs. You know Spring Boot, and them you browse the initilizr front and find
@@ -118,10 +119,10 @@ public String generateSimpleHaikai() {
     log.info("HaikaiService:generateSimpleHaikai())");
 
     return chatClient
-            .prompt(SIMPLE_TEMPLATE.create())
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
-            .call()
-            .content();
+        .prompt(SIMPLE_TEMPLATE.create())
+        .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
+        .call()
+        .content();
 }
 
 ```
@@ -168,17 +169,17 @@ public Haikai generatePowerfulHaikai(HaikaiRequest request) {
     log.info("HaikaiService:generatePowerfulHaikai(request={})", request);
 
     Prompt prompt = COMPLEX_TEMPLATE
-            .create(
-                    Map.of(
-                            "genre", request.genre(),
-                            "theme", request.theme(),
-                            "language", request.language()));
+        .create(
+            Map.of(
+                "genre", request.genre(),
+                "theme", request.theme(),
+                "language", request.language()));
 
     return chatClient
-            .prompt(prompt)
-            .advisors(new SimpleLoggerAdvisor())
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
-            .call().entity(Haikai.class);
+        .prompt(prompt)
+        .advisors(new SimpleLoggerAdvisor())
+        .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
+        .call().entity(Haikai.class);
 }
 ```
 
@@ -225,14 +226,14 @@ The code for this service is:
 
 ```java
 private static final String IMAGE_TEMPLATE = """
-            Create an image with the following Haikai:
-        
-                {haikai_line1}
-                {haikai_line2}
-                {haikai_line3}
-        
-            Be creative and catch the essence of what has been asked.
-        """;
+        Create an image with the following Haikai:
+    
+            {haikai_line1}
+            {haikai_line2}
+            {haikai_line3}
+    
+        Be creative and catch the essence of what has been asked.
+    """;
 
 private final ImageModel imageModel;
 
@@ -240,15 +241,15 @@ public byte[] generateImageHaikai(ImageHaikaiRequest imageHaikaiRequest) {
     log.info("HaikaiService:generateImageHaikai(imageHaikaiRequest={})", imageHaikaiRequest);
 
     String renderedPrompt = IMAGE_TEMPLATE
-            .replace("{haikai_line1}", imageHaikaiRequest.line1())
-            .replace("{haikai_line2}", imageHaikaiRequest.line2())
-            .replace("{haikai_line3}", imageHaikaiRequest.line3());
+        .replace("{haikai_line1}", imageHaikaiRequest.line1())
+        .replace("{haikai_line2}", imageHaikaiRequest.line2())
+        .replace("{haikai_line3}", imageHaikaiRequest.line3());
 
     ImageResponse response = imageModel.call(
-            new ImagePrompt(renderedPrompt,
-                    OpenAiImageOptions.builder()
-                            .model("gpt-image-1")
-                            .build())
+        new ImagePrompt(renderedPrompt,
+            OpenAiImageOptions.builder()
+                .model("gpt-image-1")
+                .build())
     );
 
     Image image = Objects.requireNonNull(response.getResult()).getOutput();
@@ -343,12 +344,12 @@ sequenceDiagram
 The code for this service is:
 
 ```java
-    private static final PromptTemplate ACTOR_TEMPLATE = new PromptTemplate(
-        """
-                       Generate the filmography for a {name} with the name of played character.
-                       I want an object with the top 20 movies.
-                       I want a list with the movie title, the movie year, the movie director, the actor role, and the tmdbId.
-                """);
+private static final PromptTemplate ACTOR_TEMPLATE = new PromptTemplate(
+    """
+               Generate the filmography for a {name} with the name of played character.
+               I want an object with the top 20 movies.
+               I want a list with the movie title, the movie year, the movie director, the actor role, and the tmdbId.
+        """);
 
 private final ChatClient chatClient;
 
@@ -358,11 +359,11 @@ public ActorFilms getFilmography(String name) {
     log.info("ActorsService:getFilmography(name={})", name);
 
     return chatClient
-            .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
-            .advisors(new SimpleLoggerAdvisor())
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
-            .call()
-            .entity(ActorFilms.class);
+        .prompt(ACTOR_TEMPLATE.create(Map.of("name", name)))
+        .advisors(new SimpleLoggerAdvisor())
+        .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userService.getCustomerId()))
+        .call()
+        .entity(ActorFilms.class);
 }
 ```
 
@@ -379,11 +380,11 @@ Checks:
 
 | Check | Description             |
 |:-----:|-------------------------|
-|  `Y`  | The year is correct     |
-|  `M`  | The movie is correct    |
-|  `R`  | The role is correct     |
-|  `D`  | The director is correct |
-|  `T`  | The TMDB Id is correct  |
+|   Y   | The year is correct     |
+|   M   | The movie is correct    |
+|   R   | The role is correct     |
+|   D   | The director is correct |
+|   T   | The TMDB Id is correct  |
 
 The TMBD Id is the unique identifier of a movie on [The Movie Database (TMDB)](https://www.themoviedb.org/), which is a
 popular online database for movies, TV shows and people related to the entertainment industry. The TMDB Id is a number
@@ -544,10 +545,10 @@ private int maxMessages;
 
 public ChatMemory mongoChatMemory() {
     return MessageWindowChatMemory
-            .builder()
-            .chatMemoryRepository(mongoChatMemoryRepository)
-            .maxMessages(maxMessages)
-            .build();
+        .builder()
+        .chatMemoryRepository(mongoChatMemoryRepository)
+        .maxMessages(maxMessages)
+        .build();
 }
 ```
 
@@ -559,11 +560,11 @@ memory repository:
 @Bean
 public ChatClient chatClient() {
     return chatClientBuilder
-            .defaultAdvisors(
-                    new SimpleLoggerAdvisor(),
-                    MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
-            )
-            .build();
+        .defaultAdvisors(
+            new SimpleLoggerAdvisor(),
+            MessageChatMemoryAdvisor.builder(mongoChatMemory()).build()
+        )
+        .build();
 }
 ```
 
